@@ -41,18 +41,18 @@ Through these cases, we will study the importance of determining fault detection
 1. Terminal 1: handles scenario description and user input.
     - for Demo 1a
         ```sh
-        ros2 run space_station_gnc demo1a_nauka_incident_estimate
+        ros2 run demo_nauka_incident2021_estimate demo1a_nauka_incident_estimate
         ```
 
     - for Demo 1b
         ```sh
-        ros2 run space_station_gnc demo1b_crisis_mainengine
+        ros2 run demo_nauka_incident2021_estimate demo1b_crisis_mainengine
         ```
 
 2. Terminal 2: handles space station propulsion system and attitude control dynamics, where the user (you) do not need to touch thereafter.
     - common for Demo 1a/1b
         ```sh
-        ros2 launch space_station_gnc launch_gnc.py
+        ros2 launch demo_nauka_incident2021_estimate launch_gnc.py
         ```
 
 3. Terminal 3: Visualization in RViz
