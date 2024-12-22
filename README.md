@@ -10,17 +10,20 @@ Common procedures for preparing Space Station OS:
 - Install Ubuntu 22.04
 - Install ROS 2 Humble (desktop install):
   https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debs.html
+
 - Clone Space Station OS source
 
     ```sh
-    cd /path/to/place/
-    git clone https://github.com/space-station-os/space_station_os.git
+    cd /path/to/ros2_ws
+    mkdir src
+    cd src
+    git clone https://github.com/space-station-os/demo_nauka_incident2021_estimate.git
     ```
 
 - Compile Space Station OS source
 
     ```sh
-    cd /path/to/place/space_station_os/
+    cd /path/to/ros2_ws
     colcon build --symlink-install
     source install/setup.bash
     ```
