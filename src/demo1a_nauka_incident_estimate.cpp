@@ -103,18 +103,15 @@ private:
 
         if (input == "000_init")
         {
-            //img_path = "/home/yuyuqq/space_station_os/src/space_station_gnc/media/001_start.png";
-            img_path = "src/space_station_gnc/media/001_start.png";
-            
+            img_path = "src/demo_nauka_incident2021_estimate/media/001_start.png";            
         }
         else if (input == "100_emergency_begin")
         {
-            //img_path = "/home/yuyuqq/space_station_os/src/space_station_gnc/media/100_emergency_begin.png";
-            img_path = "src/space_station_gnc/media/100_emergency_begin.png";
+            img_path = "src/demo_nauka_incident2021_estimate/media/100_emergency_begin.png";
         }
         else if (input == "102_emergency_reaction")
         {
-            img_path = "src/space_station_gnc/media/102_emergency_reaction.png";
+            img_path = "src/demo_nauka_incident2021_estimate/media/102_emergency_reaction.png";
         }
         else
         {
@@ -145,7 +142,7 @@ private:
             return;
         }
         cv::imshow("Display window", image);
-        cv::waitKey(100); // 非ブロックでイベント処理を行う millisec
+        cv::waitKey(100); // non-blocking millisec
     }
 
     rclcpp::Subscription<std_msgs::msg::String>::SharedPtr sub_topic_control_media;
@@ -223,8 +220,6 @@ void user_input_thread(rclcpp::Node::SharedPtr node)
     is_propulsion_on.push_back(false);
     int nth =  (int)is_propulsion_on.size();
 
-    if(is_propulsion_on[0]) 
-        printf("disabling warning message\n");
 
     while (rclcpp::ok())
     {
@@ -232,29 +227,32 @@ void user_input_thread(rclcpp::Node::SharedPtr node)
         if(mode_demo == "000_init"){
             msg->data = "000_init";
             pub_control_media->publish(*msg);
-            //pub_control_media->publish("000_init");
             printf("Press `ok` then `enter key` to start demo\n");
             std::cin >> userinput;
 
 
             geometry_msgs::msg::Vector3 angvel_init;
             angvel_init.x = 0.0;
-            angvel_init.y = +0.22 / 180.0 * M_PI;
+            //angvel_init.y = +0.22 / 180.0 * M_PI;
+            angvel_init.y = -0.22 / 180.0 * M_PI;
             angvel_init.z = 0.0;
             pub_angvel_overwrite->publish(angvel_init);        
 
             geometry_msgs::msg::Quaternion attitude_init;
             tf2::Quaternion attinit; // pose
             //attinit.setRPY(0.0,1.72/180.0*M_PI,0.0);
-            attinit.setRPY(0.0,11.97/180.0*M_PI,0.0);
+            attinit.setRPY(0.0,-1.72/180.0*M_PI,0.0);
+            //attinit.setRPY(0.0,11.97/180.0*M_PI,0.0);
             attitude_init.x = attinit.x();
             attitude_init.y = attinit.y();
             attitude_init.z = attinit.z();
             attitude_init.w = attinit.w();
             pub_attitude_overwrite->publish(attitude_init);        
 
-            is_propulsion_on[0] = true;
-            msg->data = "nauka_mainengine,on";
+            msg->data = "nauka_thruster_zenith,on";
+            //is_propulsion_on[0] = true;
+            is_propulsion_on[9] = true; //Nauka zenith thruster
+            //msg->data = "nauka_mainengine,on";
             pub_target_thrust->publish(*msg);
             mode_demo = "100_emergency_begin";
         }
@@ -265,7 +263,7 @@ void user_input_thread(rclcpp::Node::SharedPtr node)
             msg->data = "100_emergency_begin";
             pub_control_media->publish(*msg);
             mode_demo = "101_emergency_begin";
-            printf("Are you aeady to take actions? (Answer `ok` to react)\n");            
+            printf("Are you ready to take actions? (Answer `ok` to react)\n");            
             std::cin >> userinput;
         }
         else if(mode_demo == "101_emergency_begin"){
@@ -273,8 +271,8 @@ void user_input_thread(rclcpp::Node::SharedPtr node)
             if(5.0 < tcur - tinit){
                 printf("Emergency situation.\n");
                 printf("\n");
-                //printf("Nauka is forced to be commanded to bring the body to nadir, causing pitching up.");
-                printf("The main engine of Nauka is experiencing a stuck-on failure.");
+                printf("Nauka is forced to be commanded to bring the body to nadir, causing pitching up.");
+                //printf("The main engine of Nauka is experiencing a stuck-on failure.");
                 printf("Commander, this resulting acceleration and rotation has to be stopped.\n");
                 printf("\n");
                 printf("  Can we use the engines of the docked spacecraft to remedy the situation?\n");
@@ -288,8 +286,8 @@ void user_input_thread(rclcpp::Node::SharedPtr node)
         }
         else if(mode_demo == "102_emergency_reaction" || mode_demo == "104_emergency_reaction2"){
             if(mode_demo == "102_emergency_reaction"){
-                //printf(" Nauka thrusters have 800N of force to bring the body to nadir, causing pitching up.\n");                
-                printf(" The Nauka main engine has 3900N to bring the body to zenith, causing pitching down.\n");                
+                printf(" Nauka thrusters have 800N of force to bring the body to nadir, causing pitching up.\n");                
+                //printf(" The Nauka main engine has 3900N to bring the body to zenith, causing pitching down.\n");                
                 printf(" - Which engine should we fire?\n");                
             }
             else if(mode_demo == "104_emergency_reaction2")
@@ -371,10 +369,12 @@ void user_input_thread(rclcpp::Node::SharedPtr node)
             //printf("Forwarding: %f min", messagedouble.data / 60.0);
             pub_t_fwd_sim->publish(messagedouble);
             tinit = tinit - t_fwd;
-            msg->data = "nauka_mainengine,off";
+            msg->data = "nauka_thruster_zenith,off";
+            //msg->data = "nauka_mainengine,off";
             pub_target_thrust->publish(*msg);
+            is_propulsion_on[9] = false; //Nauka zenith thruster
 
-            printf("Nauka's main engine has stopped. The propellant has run out by now.\n");
+            printf("Nauka's main zenith thruster has stopped. The propellant has run out by now.\n");
             printf("Now rotation needs to be stopped.\n");
 
             mode_demo = "104_emergency_reaction2"; //

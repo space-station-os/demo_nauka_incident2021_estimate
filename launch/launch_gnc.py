@@ -6,7 +6,7 @@ from launch import LaunchDescription
 from launch_ros.actions import Node
 
 def generate_launch_description():
-    package_share_directory = get_package_share_directory('space_station_gnc')
+    package_share_directory = get_package_share_directory('demo_nauka_incident2021_estimate')
     urdf_file_path = os.path.join(package_share_directory,'urdf','ISS_stationaryFromNasa.urdf')
     with open(urdf_file_path, 'r') as urdf_file:
         urdf_data = urdf_file.read()
@@ -19,12 +19,12 @@ def generate_launch_description():
             parameters=[{'robot_description': urdf_data}],
         ),
         Node(
-            package='space_station_gnc',
+            package='demo_nauka_incident2021_estimate',
             executable='torque_collector',
             name='torque_collector'
         ),
         Node(
-            package='space_station_gnc',
+            package='demo_nauka_incident2021_estimate',
             executable='attitude_dynamics',
             name='attitude_dynamics'
         )

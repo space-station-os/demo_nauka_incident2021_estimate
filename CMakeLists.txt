@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-project(space_station_gnc)
+project(demo_nauka_incident2021_estimate)
 
 # Default to C++14
 if(NOT CMAKE_CXX_STANDARD)
@@ -25,12 +25,12 @@ find_package(SDL2 REQUIRED)
 # Include directories
 include_directories(${OpenCV_INCLUDE_DIRS} ${SDL2_INCLUDE_DIRS})
 
-add_executable(space_station_gnc_node src/space_station_gnc.cpp)
+# add_executable(demo_nauka_incident2021_estimate_node src/demo_nauka_incident2021_estimate.cpp)
 add_executable(demo1a_nauka_incident_estimate src/demo1a_nauka_incident_estimate.cpp)
 add_executable(demo1b_crisis_mainengine src/demo1b_crisis_mainengine.cpp)
 add_executable(torque_collector src/torque_collector.cpp)
 add_executable(attitude_dynamics src/attitude_dynamics.cpp)
-ament_target_dependencies(space_station_gnc_node rclcpp std_msgs)
+# ament_target_dependencies(demo_nauka_incident2021_estimate_node rclcpp std_msgs)
 ament_target_dependencies(demo1a_nauka_incident_estimate rclcpp std_msgs tf2_geometry_msgs tf2 tf2_ros OpenCV)
 ament_target_dependencies(demo1b_crisis_mainengine rclcpp std_msgs tf2_geometry_msgs tf2 tf2_ros OpenCV)
 ament_target_dependencies(torque_collector rclcpp std_msgs tf2 tf2_ros tf2_geometry_msgs)
@@ -42,7 +42,7 @@ target_link_libraries(demo1b_crisis_mainengine ${OpenCV_LIBRARIES} ${SDL2_LIBRAR
 
 # source by c++
 install(TARGETS
-  space_station_gnc_node
+#  demo_nauka_incident2021_estimate_node
   demo1a_nauka_incident_estimate
   demo1b_crisis_mainengine
   torque_collector
@@ -51,7 +51,7 @@ install(TARGETS
 
 # source by python
 #install(PROGRAMS
-#  src/space_station_gnc/demo_crisis.py
+#  src/demo_nauka_incident2021_estimate/demo_crisis.py
 #  DESTINATION lib/${PROJECT_NAME})
 
 #launch files
